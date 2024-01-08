@@ -1,0 +1,98 @@
+info:
+  title: Проект YaCut
+  version: 0.1.0
+tags: []
+paths:
+  /api/id/:
+    post:
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/create_id_rec'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/create_id'
+          description: Successful response
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Пустой запрос:
+                  value:
+                    message: Отсутствует тело запроса
+                Недопустимый короткий идентификатор:
+                  value:
+                    message: "Указано недопустимое имя для короткой ссылки"
+                Отсутствует обязательное поле:
+                  value:
+                    message: '"url" является обязательным полем!'
+                Предложенное сокращение уже существует:
+                  value:
+                    message: "Предложенный вариант короткой ссылки уже существует."
+          description: Not found
+      summary: Create Id
+  /api/id/{short_id}/:
+    get:
+      parameters:
+        - in: path
+          name: short_id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/get_url'
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Несуществующий id:
+                  value:
+                    message: Указанный id не найден
+          description: Not found
+      summary: Get Url
+openapi: 3.0.3
+components:
+  schemas:
+    Error:
+      properties:
+        message:
+          type: string
+      type: object
+    get_url:
+      properties:
+        url:
+          type: string
+      type: object
+      description: Получение ссылки по идентификатору
+    create_id:
+      properties:
+        url:
+          type: string
+        short_link:
+          type: string
+      type: object
+      description: Генерация новой ссылки
+    create_id_rec:
+      properties:
+        url:
+          type: string
+        custom_id:
+          type: string
+      type: object
+      required:
+          - url
+      description: Генерация новой ссылки

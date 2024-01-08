@@ -1,0 +1,754 @@
+{
+	"info": {
+		"_postman_id": "8bc281cf-4ab1-4b8c-83a0-4bf771f79b7a",
+		"name": "Yacut",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16131548"
+	},
+	"item": [
+		{
+			"name": "create_short_links",
+			"item": [
+				{
+					"name": "create_short_link_with_url_field_only",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseData = pm.response.json();",
+									"const responseSchema = {",
+									"    \"type\": \"object\",",
+									"    \"properties\": {",
+									"        \"url\": {\"type\": \"string\"},",
+									"        \"short_link\": {\"type\": \"string\"}",
+									"    },",
+									"    \"required\": [\"url\", \"short_link\"],",
+									"    \"additionalProperties\": false",
+									"};",
+									"",
+									"pm.test(\"Статус-код ответа должен быть 201\", function () {",
+									"    pm.expect(",
+									"        pm.response.code,",
+									"        \"Запрос на создание короткой ссылки без поля `custom_id` должен вернуть ответ с кодом 201\"",
+									"    ).to.be.eql(201);",
+									"    var short_link = _.get(responseData, \"short_link\");",
+									"    if (short_link) {",
+									"        short_link = short_link.replace(/\\/+$/, \"\");",
+									"        short_link = short_link.replace(/http:\\/\\/127.0.0.1:5000\\//, \"\")",
+									"        pm.collectionVariables.set(\"firstShortId\", short_link);",
+									"    }",
+									"});",
+									"pm.test(\"Структура ответа должна соответстовать ожидаемой\", function () {",
+									"    pm.response.to.have.jsonSchema(responseSchema);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"url\": \"{{firstLink}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/id/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create_short_link_with_full_body",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseData = pm.response.json();",
+									"const responseSchema = {",
+									"    \"type\": \"object\",",
+									"    \"properties\": {",
+									"        \"url\": {\"type\": \"string\"},",
+									"        \"short_link\": {\"type\": \"string\"}",
+									"    },",
+									"    \"required\": [\"url\", \"short_link\"],",
+									"    \"additionalProperties\": false",
+									"};",
+									"",
+									"pm.test(\"Статус-код ответа должен быть 201\", function () {",
+									"    pm.expect(",
+									"        pm.response.code,",
+									"        \"Запрос на создание короткой ссылки без поля `custom_id` должен вернуть ответ с кодом 201\"",
+									"    ).to.be.eql(201);",
+									"    var short_link = _.get(responseData, \"short_link\");",
+									"    if (short_link) {",
+									"        short_link = short_link.replace(/\\/+$/, \"\");",
+									"        short_link = short_link.replace(/http:\\/\\/127.0.0.1:5000\\//, \"\")",
+									"        pm.collectionVariables.set(\"secondShortId\", short_link);",
+									"    }",
+									"});",
+									"pm.test(\"Структура ответа должна соответстовать ожидаемой\", function () {",
+									"    pm.response.to.have.jsonSchema(responseSchema);",
+									"});",
+									"pm.test(\"В качестве значения `short_link` должны быть использованы данные из запроса\", function () {",
+									"    var expected_custom_id =  JSON.parse(pm.request.body).custom_id",
+									"    var short_link = responseData.short_link",
+									"    short_link = short_link.replace(/\\/+$/, '');",
+									"    pm.expect(",
+									"        short_link.endsWith(expected_custom_id),",
+									"        \"Убедитесь, что при наличии в запросе данных для поля `custom_id`, его значение используется для формирования короткой ссылки\"",
+									"    ).to.be.true;",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"url\": \"{{secondLink}}\",\n    \"custom_id\": \"pep8\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/id/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "create_short_links_bad_requests",
+			"item": [
+				{
+					"name": "create_short_link_without_request_body",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseData = pm.response.json();",
+									"const responseSchema = {",
+									"    \"type\": \"object\",",
+									"    \"properties\": {",
+									"        \"message\": {\"type\": \"string\"},",
+									"    },",
+									"    \"required\": [\"message\"],",
+									"    \"additionalProperties\": false",
+									"};",
+									"",
+									"pm.test(\"Статус-код ответа должен быть 400\", function () {",
+									"    pm.expect(",
+									"        pm.response.code,",
+									"        \"Запрос на создание короткой ссылки не содержащий тело запроса должен вернуть ответ с кодом 400\"",
+									"    ).to.be.eql(400);",
+									"});",
+									"pm.test(\"Структура ответа должна соответстовать ожидаемой\", function () {",
+									"    pm.response.to.have.jsonSchema(responseSchema);",
+									"});",
+									"pm.test(\"Сообщение об ошибке должно соответствовать документации\", function () {",
+									"    const error_message = responseData.message",
+									"    pm.expect(",
+									"        error_message === \"Отсутствует тело запроса\",",
+									"        \"Убедитесь, что текст сообщения об ошибке соответствует спецификации\"    ",
+									"    ).to.be.true;",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/id/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create_short_link_without_url_field",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseData = pm.response.json();",
+									"const responseSchema = {",
+									"    \"type\": \"object\",",
+									"    \"properties\": {",
+									"        \"message\": {\"type\": \"string\"},",
+									"    },",
+									"    \"required\": [\"message\"],",
+									"    \"additionalProperties\": false",
+									"};",
+									"",
+									"pm.test(\"Статус-код ответа должен быть 400\", function () {",
+									"    pm.expect(",
+									"        pm.response.code,",
+									"        \"Запрос на создание короткой ссылки не содержащий тело запроса должен вернуть ответ с кодом 400\"",
+									"    ).to.be.eql(400);",
+									"});",
+									"pm.test(\"Структура ответа должна соответстовать ожидаемой\", function () {",
+									"    pm.response.to.have.jsonSchema(responseSchema);",
+									"});",
+									"pm.test(\"Сообщение об ошибке должно соответствовать документации\", function () {",
+									"    const error_message = responseData.message",
+									"    pm.expect(",
+									"        error_message === '\\\"url\\\" является обязательным полем!',",
+									"        \"Убедитесь, что текст сообщения об ошибке соответствует спецификации\"    ",
+									"    ).to.be.true;",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"custom_id\": \"NoURL\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/id/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create_short_link_with_invalid_custom_id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseData = pm.response.json();",
+									"const responseSchema = {",
+									"    \"type\": \"object\",",
+									"    \"properties\": {",
+									"        \"message\": {\"type\": \"string\"},",
+									"    },",
+									"    \"required\": [\"message\"],",
+									"    \"additionalProperties\": false",
+									"};",
+									"",
+									"pm.test(\"Статус-код ответа должен быть 400\", function () {",
+									"    pm.expect(",
+									"        pm.response.code,",
+									"        \"Запрос на создание короткой ссылки не содержащий тело запроса должен вернуть ответ с кодом 400\"",
+									"    ).to.be.eql(400);",
+									"});",
+									"pm.test(\"Структура ответа должна соответстовать ожидаемой\", function () {",
+									"    pm.response.to.have.jsonSchema(responseSchema);",
+									"});",
+									"pm.test(\"Сообщение об ошибке должно соответствовать документации\", function () {",
+									"    const error_message = responseData.message",
+									"    pm.expect(",
+									"        error_message === 'Указано недопустимое имя для короткой ссылки',",
+									"        \"Убедитесь, что текст сообщения об ошибке соответствует спецификации\"    ",
+									"    ).to.be.true;",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"url\": \"https://regex101.com/\",\n    \"custom_id\": \"inv@lidChar$\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/id/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create_short_link_with_duplicated_custom_id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseData = pm.response.json();",
+									"const responseSchema = {",
+									"    \"type\": \"object\",",
+									"    \"properties\": {",
+									"        \"message\": {\"type\": \"string\"},",
+									"    },",
+									"    \"required\": [\"message\"],",
+									"    \"additionalProperties\": false",
+									"};",
+									"",
+									"pm.test(\"Статус-код ответа должен быть 400\", function () {",
+									"    pm.expect(",
+									"        pm.response.code,",
+									"        \"Запрос на создание короткой ссылки не содержащий тело запроса должен вернуть ответ с кодом 400\"",
+									"    ).to.be.eql(400);",
+									"});",
+									"pm.test(\"Структура ответа должна соответстовать ожидаемой\", function () {",
+									"    pm.response.to.have.jsonSchema(responseSchema);",
+									"});",
+									"pm.test(\"Сообщение об ошибке должно соответствовать документации\", function () {",
+									"    const error_message = responseData.message",
+									"    pm.expect(",
+									"        error_message === 'Предложенный вариант короткой ссылки уже существует.',",
+									"        \"Убедитесь, что текст сообщения об ошибке соответствует спецификации\"    ",
+									"    ).to.be.true;",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"url\": \"https://editor.swagger.io/\",\n    \"custom_id\": \"example\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/id/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "get_original_links",
+			"item": [
+				{
+					"name": "get_original_url_by_generated_short_id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseData = pm.response.json();",
+									"const responseSchema = {",
+									"    \"type\": \"object\",",
+									"    \"properties\": {",
+									"        \"url\": {\"type\": \"string\"},",
+									"    },",
+									"    \"required\": [\"url\"],",
+									"    \"additionalProperties\": false",
+									"};",
+									"",
+									"pm.test(\"Статус-код ответа должен быть 200\", function () {",
+									"    pm.expect(",
+									"        pm.response.code,",
+									"        \"Корректный запрос на получение оригинальной ссылки должен вернуть ответ с кодом 200\"",
+									"    ).to.be.eql(200);",
+									"});",
+									"pm.test(\"Структура ответа должна соответстовать ожидаемой\", function () {",
+									"    pm.response.to.have.jsonSchema(responseSchema);",
+									"});",
+									"pm.test(\"Ответ должен содержать полную ссылку\", function () {",
+									"    pm.expect(",
+									"        responseData.url === pm.collectionVariables.get(\"firstLink\"),",
+									"        \"Убедитесь, что поле `url` содержит первоначальную ссылку, соответствующую `short_id`\"    ",
+									"    ).to.be.true;",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/id/{{firstShortId}}",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"id",
+								"{{firstShortId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get_original_url_by_user_short_id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseData = pm.response.json();",
+									"const responseSchema = {",
+									"    \"type\": \"object\",",
+									"    \"properties\": {",
+									"        \"url\": {\"type\": \"string\"},",
+									"    },",
+									"    \"required\": [\"url\"],",
+									"    \"additionalProperties\": false",
+									"};",
+									"",
+									"pm.test(\"Статус-код ответа должен быть 200\", function () {",
+									"    pm.expect(",
+									"        pm.response.code,",
+									"        \"Корректный запрос на получение оригинальной ссылки должен вернуть ответ с кодом 200\"",
+									"    ).to.be.eql(200);",
+									"});",
+									"pm.test(\"Структура ответа должна соответстовать ожидаемой\", function () {",
+									"    pm.response.to.have.jsonSchema(responseSchema);",
+									"});",
+									"pm.test(\"Ответ должен содержать полную ссылку\", function () {",
+									"    pm.expect(",
+									"        responseData.url === pm.collectionVariables.get(\"secondLink\"),",
+									"        \"Убедитесь, что поле `url` содержит первоначальную ссылку, соответствующую `short_id`\"    ",
+									"    ).to.be.true;",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/id/{{secondShortId}}",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"id",
+								"{{secondShortId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get_original_url_added_througth_orm",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseData = pm.response.json();",
+									"const responseSchema = {",
+									"    \"type\": \"object\",",
+									"    \"properties\": {",
+									"        \"url\": {\"type\": \"string\"},",
+									"    },",
+									"    \"required\": [\"url\"],",
+									"    \"additionalProperties\": false",
+									"};",
+									"",
+									"pm.test(\"Статус-код ответа должен быть 200\", function () {",
+									"    pm.expect(",
+									"        pm.response.code,",
+									"        \"Корректный запрос на получение оригинальной ссылки должен вернуть ответ с кодом 200\"",
+									"    ).to.be.eql(200);",
+									"});",
+									"pm.test(\"Структура ответа должна соответстовать ожидаемой\", function () {",
+									"    pm.response.to.have.jsonSchema(responseSchema);",
+									"});",
+									"pm.test(\"Ответ должен содержать полную ссылку\", function () {",
+									"    pm.expect(",
+									"        responseData.url === pm.collectionVariables.get(\"ormAddedLink\"),",
+									"        \"Убедитесь, что поле `url` содержит первоначальную ссылку, соответствующую `short_id`\"    ",
+									"    ).to.be.true;",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/id/{{ormAddedShortID}}",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"id",
+								"{{ormAddedShortID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "get_original_link_bad_requests",
+			"item": [
+				{
+					"name": "get_original_url_by_generated_short_id Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseData = pm.response.json();",
+									"const responseSchema = {",
+									"    \"type\": \"object\",",
+									"    \"properties\": {",
+									"        \"message\": {\"type\": \"string\"},",
+									"    },",
+									"    \"required\": [\"message\"],",
+									"    \"additionalProperties\": false",
+									"};",
+									"",
+									"pm.test(\"Статус-код ответа должен быть 404\", function () {",
+									"    pm.expect(",
+									"        pm.response.code,",
+									"        \"Запрос на получение первоначальной ссылки с несуществующим `short_id` должен вернуть ответ с кодом 404\"",
+									"    ).to.be.eql(404);",
+									"});",
+									"pm.test(\"Структура ответа должна соответстовать ожидаемой\", function () {",
+									"    pm.response.to.have.jsonSchema(responseSchema);",
+									"});",
+									"pm.test(\"Сообщение об ошибке должно соответствовать документации\", function () {",
+									"    const error_message = responseData.message",
+									"    pm.expect(",
+									"        error_message === \"Указанный id не найден\",",
+									"        \"Убедитесь, что текст сообщения об ошибке соответствует спецификации\"    ",
+									"    ).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/id/NonExistingShortId",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"id",
+								"NonExistingShortId"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://127.0.0.1:5000",
+			"type": "string"
+		},
+		{
+			"key": "firstLink",
+			"value": "https://flask.palletsprojects.com/en/2.3.x/blueprints/",
+			"type": "string"
+		},
+		{
+			"key": "secondLink",
+			"value": "https://peps.python.org/pep-0008/",
+			"type": "string"
+		},
+		{
+			"key": "ormAddedLink",
+			"value": "https://example.com/",
+			"type": "string"
+		},
+		{
+			"key": "ormAddedShortID",
+			"value": "example",
+			"type": "string"
+		},
+		{
+			"key": "firstShortId",
+			"value": ""
+		},
+		{
+			"key": "secondShortId",
+			"value": ""
+		}
+	]
+}

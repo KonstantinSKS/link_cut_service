@@ -1,0 +1,122 @@
+/* Основной Цвет: #13629E
+#285576
+#063D67
+#4693CF
+#6BA3CF
+Вторичный Цвет A:
+#2222AC
+#343481
+#0B0B70
+#5555D5
+#7878D5
+Вторичный Цвет B:
+#0AA864
+#257E58
+#036D40
+#3ED494
+#66D4A5 */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;500;700&display=swap');
+
+
+body {
+    font-family: Inter,Arial,Lucida Grande,sans-serif;
+    padding-top: 1rem;
+    color: #4b4f54;
+    font-size: 1.15vw;
+    font-weight: 200;
+}
+@media (max-width: 768px) {
+    body {
+      font-size: 1.5rem;
+    }
+    body small {
+        font-size: .5rem;
+      }
+      .nav {
+        display: block;
+    }
+  }
+main {
+    padding-top: 5em;
+}
+
+
+
+body p {
+    line-height: 1.2;
+}
+.btn-primary {
+    color: #fff;
+    background-color: #13629E;
+    border-color: #13629E;
+}
+.btn-primary:hover {
+    color: #fff;
+    background-color: #063D67;
+    border-color: #13629E;
+}
+
+
+.bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+  }
+
+  @media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+      font-size: 3.5rem;
+    }
+  }
+a.nav-link {
+    transition: opacity .3s ease,color .3s ease;
+    color: #063D67;
+    font-weight: 500;
+    /* font-size: 1.1vw; */
+    line-height: 1em;
+    text-transform: uppercase;
+}
+
+a.nav-link:hover {
+    color: #13629E;
+    text-decoration: underline;
+}
+
+.main-subtitle { 
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 1.1;
+}
+.main-subtitle strong{ 
+    color: #0AA864;
+}
+
+a.regular-link{
+    text-decoration: none;
+    transition: opacity .3s ease,color .3s ease;
+    color: #063D67;
+    font-weight: 700;
+}
+
+a.regular-link:hover {
+    color: #13629E;
+    text-decoration: underline;
+}
+
+.objects .card-header {
+    padding: .5rem 1rem;
+    margin-bottom: .5rem;
+    background-color: rgba(0,0,0,.03);
+    border-bottom: none;
+}
+
+.contacts ul {
+    list-style: none;
+    margin-left: -2rem;
+}
+
+footer a.regular-link {
+    font-weight: 200;
+}
