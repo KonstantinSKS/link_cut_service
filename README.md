@@ -15,7 +15,7 @@
 git clone https://github.com/KonstantinSKS/link_cut_service.git
 ```
 ```
-cd yacut
+cd link_cut_service
 ```
 Cоздать и активировать виртуальное окружение:
 ```
