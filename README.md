@@ -19,7 +19,7 @@ cd link_cut_service
 ```
 Cоздать и активировать виртуальное окружение:
 ```
-python -m venv venv
+py -3.9 -m venv venv
 ```
 ### Команда для Windows:
 ```
@@ -31,7 +31,7 @@ source venv/bin/activate
 ```
 Установить зависимости из файла requirements.txt:
 ```
-python3 -m pip install --upgrade pip
+python -m pip install --upgrade pip
 ```
 ```
 pip install -r requirements.txt
